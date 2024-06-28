@@ -1,0 +1,13 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as CropperLiteStories from './Cropcanvas.stories';
+
+<Meta of={CropperLiteStories} />
+
+# Cropper Lite
+
+An image cropper for profile picture, cover photo, and so on...
+
+<Canvas of={CropperLiteStories.Profile} />
+<Canvas of={CropperLiteStories.Cover} />
+<Canvas of={CropperLiteStories.Custom} />
