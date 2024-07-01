@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-export const CropCanvas = ({ backgroundColor }) => {
+export const CropCanvas = ({ style, canvasStyle, aspectRatio, customAspectRation }) => {
    const [range, setRange] = useState(0)
    const [imgSrc, setImgSrc] = useState(null)
    const canvas = useRef(null)
@@ -186,18 +186,16 @@ export const CropCanvas = ({ backgroundColor }) => {
       }
    }
 
-   // Styles
+   // Style
    let container = { display: 'flex', flexDirection: 'column' }
-   let button = { margin: '1rem auto', borderRadius: '8px', background: backgroundColor, color: 'white' , padding: '.8rem 2rem'}
+   let button = { margin: '1rem auto', borderRadius: '8px', background: 'teal', color: 'white' , padding: '.8rem 2rem'}
    let page = { display: display.current, position: 'absolute', height: '100vh', width: '100vw', background: '#00000082', top: 0, left: 0, justifyContent: 'center', flexDirection: 'column' }
    let cropper = { display: display.current, flexDirection: 'column', margin: 'auto',  top: 0, left: 0, height: '100vh', width: '100vw' }
    let rangeStyle = { width: '80%', display: 'flex', margin: '0 auto 1.5rem' , flexDirection: 'column' }
 
-   // console.log(selectorStyle)
-   
    return (
       <div style={ container }>
-         <label htmlFor="file" style={ button }>
+         <label htmlFor="file" style={ button | style }>
             <input type="file" name="file" id='file' style={{ display: 'none' }} onChange={putImageInCanvas}/>
             { 'Select File'  }         
          </label>

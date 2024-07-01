@@ -2,20 +2,31 @@
   "name": "cropper-lite",
   "version": "1.0.0",
   "description": "a simple cropping and resizing tool",
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "rollup -c --bundleConfigAsCjs",
+    "test": "echo \"no test specified\" ",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
+  "type": "module",
   "keywords": [
-    "Otonye",
-    "edwin"
+    "cropper",
+    "cropper-lite",
+    "react-cropper-lite"
   ],
   "author": "otonye edwin",
   "license": "MIT",
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.24.7",
     "@chromatic-com/storybook": "^1.5.0",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/addon-essentials": "^8.1.10",
     "@storybook/addon-interactions": "^8.1.10",
     "@storybook/addon-links": "^8.1.10",
@@ -28,10 +39,19 @@
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "storybook": "^8.1.10"
+    "rollup": "^4.18.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "storybook": "^8.1.10",
+    "tslib": "^2.6.3"
   },
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@rollup/plugin-babel": "^6.0.4"
   }
 }

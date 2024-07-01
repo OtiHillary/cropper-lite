@@ -1,1 +1,1 @@
-export * from './stories/components/CropCanvas'
+export * from './components/Cropcanvas.jsx'
