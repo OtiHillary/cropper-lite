@@ -30,7 +30,7 @@ npm install
 
 ## Usage
 
-**Cropperlite** `<CropCanvas />` is the main component of the library. The Customizable Attributes of the `<CropCanvas />` component are:
+**Crop image** - This `<CropCanvas />` component is the main component of the **Cropperlite** library which uses canvas API to crop an image. The Customizable Attributes of the component are:
 
 - `aspectRatio`
 - `customAspectRatio`
@@ -45,7 +45,38 @@ export default function component(){
       <>
          <CropCanvas 
             aspectRatio = 'profile' // profile | cover
-            customAspectRatio = {{3, 1}}
+            style = {{
+               color: 'blue'
+            }}
+            canvasStyle = {{
+               backgroundColor: 'teal',
+               borderRadius: '5em'
+            }}
+         />
+      </>
+   )
+}
+```
+
+**Retrieve the image**: The `<CropCanvas />` component temporarily stores the image data in the localSTorage of the client after cropping. Cropperlite provides a simple module `retriveImageData()` that accesses the URL of image. You can use this URL to display the cropped image in your app or permanently store it in database. 
+
+```javascript
+import { Cropcanvas, retriveImageData } from 'cropper-lite'
+
+export default function component(){
+   const [imageSrc, setImageSrc] = useState(null)
+
+   function retrieveImage(){
+      let imageDataUrl = retrieveImageData()
+      setImageSrc(imageDataUrl)
+
+      // code to permanently store in database...
+   }
+
+   return(
+      <>
+         <CropCanvas 
+            aspectRatio = 'profile' // profile | cover
             style = {{
                color: 'blue'
             }}
@@ -53,6 +84,10 @@ export default function component(){
                backgroundColor: 'teal'
             }}
          />
+
+         <img src = { imageSrc }  alt = '' /> //temporary image display
+         <button onClick={ retrieveImage }>Display image</button>
+
       </>
    )
 }

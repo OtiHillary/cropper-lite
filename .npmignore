@@ -1,7 +1,10 @@
 node_modules
-
+components
+.gitignore
 stories
 .storybook
-rollip.config.js
+.babelrc
+index.js
+rollup.config.js
 webpack.config.js
 *storybook.log

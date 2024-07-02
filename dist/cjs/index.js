@@ -33,6 +33,14 @@ function _asyncToGenerator(n) {
     });
   };
 }
+function _defineProperty(e, r, t) {
+  return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
 function _iterableToArrayLimit(r, l) {
   var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
   if (null != t) {
@@ -59,6 +67,27 @@ function _iterableToArrayLimit(r, l) {
 }
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function ownKeys(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function (r) {
+      return Object.getOwnPropertyDescriptor(e, r).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread2(e) {
+  for (var r = 1; r < arguments.length; r++) {
+    var t = null != arguments[r] ? arguments[r] : {};
+    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
+      _defineProperty(e, r, t[r]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+    });
+  }
+  return e;
 }
 function _regeneratorRuntime() {
   _regeneratorRuntime = function () {
@@ -364,6 +393,20 @@ function _regeneratorRuntime() {
 function _slicedToArray(r, e) {
   return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
 }
+function _toPrimitive(t, r) {
+  if ("object" != typeof t || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != typeof i) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+function _toPropertyKey(t) {
+  var i = _toPrimitive(t, "string");
+  return "symbol" == typeof i ? i : i + "";
+}
 function _unsupportedIterableToArray(r, a) {
   if (r) {
     if ("string" == typeof r) return _arrayLikeToArray(r, a);
@@ -372,8 +415,16 @@ function _unsupportedIterableToArray(r, a) {
   }
 }
 
+var retrieveImageData = function retrieveImageData() {
+  var imageData = localStorage.getItem('croppedImage');
+  console.log(imageData);
+  return imageData;
+};
 var CropCanvas = function CropCanvas(_ref) {
-  var backgroundColor = _ref.backgroundColor;
+  var style = _ref.style,
+    canvasStyle = _ref.canvasStyle,
+    aspectRatio = _ref.aspectRatio;
+    _ref.customAspectRatio;
   var _useState = useState(0),
     _useState2 = _slicedToArray(_useState, 2),
     range = _useState2[0],
@@ -386,26 +437,30 @@ var CropCanvas = function CropCanvas(_ref) {
   var canvas1 = useRef(null);
   var canvas2 = useRef(null);
   var canvas3 = useRef(null);
-  var display = useRef('none');
-  var _useState5 = useState({}),
+  var _useState5 = useState('none'),
     _useState6 = _slicedToArray(_useState5, 2),
-    init = _useState6[0],
-    setInit = _useState6[1];
+    display = _useState6[0],
+    setDisplay = _useState6[1];
+  var _useState7 = useState({}),
+    _useState8 = _slicedToArray(_useState7, 2),
+    init = _useState8[0],
+    setInit = _useState8[1];
   var oldValue = useRef(0);
   var img = useRef(null);
   var isDragging = useRef(false);
-  var _useState7 = useState(null),
-    _useState8 = _slicedToArray(_useState7, 2),
-    posX = _useState8[0],
-    setPosX = _useState8[1];
   var _useState9 = useState(null),
     _useState10 = _slicedToArray(_useState9, 2),
-    posY = _useState10[0],
-    setPosY = _useState10[1];
+    posX = _useState10[0],
+    setPosX = _useState10[1];
+  var _useState11 = useState(null),
+    _useState12 = _slicedToArray(_useState11, 2),
+    posY = _useState12[0],
+    setPosY = _useState12[1];
   document.addEventListener('mousemove', drag);
   var holeX = useRef(null);
   var holeY = useRef(null);
   var holeRadius = useRef(null);
+  var aspectRatioDimensions = useRef(null);
   function holdDown(event) {
     isDragging.current = true;
     setPosX(event.clientX - canvas1.current.offsetLeft);
@@ -464,17 +519,15 @@ var CropCanvas = function CropCanvas(_ref) {
     }
   }
   function finishCropCanvas() {
-    // Relocating the crop circle
-    holeX.current = 0.1 * canvas.current.width - canvas1.current.offsetLeft;
-    holeY.current = 0.1 * canvas.current.height - canvas1.current.offsetTop;
-
     // Getting image data from canvas1
-    var imageData = canvas1.current.getContext('2d').getImageData(holeX.current, holeY.current, canvas.current.width, canvas.current.height);
+    var imageData = canvas1.current.getContext('2d').getImageData(aspectRatioDimensions.current.x, aspectRatioDimensions.current.y, aspectRatioDimensions.current.w, aspectRatioDimensions.current.h);
 
     // Update canvas1 with modified image data
     canvas3.current.height = 2 * holeRadius.current;
     canvas3.current.width = 2 * holeRadius.current;
     canvas3.current.getContext('2d').putImageData(imageData, 0, 0);
+    var imageDataURL = canvas3.current.toDataURL('image/png'); // Specifying image format (e.g., 'image/jpeg')
+    localStorage.setItem('croppedImage', imageDataURL);
   }
   function fitImageInCanvas(width, height) {
     console.log(height, width);
@@ -527,7 +580,7 @@ var CropCanvas = function CropCanvas(_ref) {
   }
   function _draw() {
     _draw = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(imgWidth, imgHeight, img) {
-      var context, context1, context2, dimensions;
+      var context, context1, context2, dimensions, coverWidth, coverHeight;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
@@ -535,6 +588,8 @@ var CropCanvas = function CropCanvas(_ref) {
             context1 = canvas1.current.getContext('2d');
             context2 = canvas2.current.getContext('2d');
             dimensions = fitImageInCanvas(imgWidth, imgHeight);
+            coverWidth = 0.9 * canvas.current.width;
+            coverHeight = coverWidth / 3;
             holeRadius.current = 0.4 * canvas.current.height;
             holeX.current = canvas.current.width / 2;
             holeY.current = canvas.current.height / 2;
@@ -549,17 +604,42 @@ var CropCanvas = function CropCanvas(_ref) {
 
             // Clearing a circular area to create the hole
             context2.beginPath();
-            context2.arc(holeX.current, holeY.current, holeRadius.current, 0, 2 * Math.PI);
+            if (aspectRatio == 'profile') {
+              context2.arc(holeX.current, holeY.current, holeRadius.current, 0, 2 * Math.PI);
+              // Outline around the hole (for better visibility)
+              context2.strokeStyle = 'rgba(255, 255, 255)';
+              context2.lineWidth = 8;
+              context2.beginPath();
+              context2.arc(holeX.current, holeY.current, holeRadius.current, 0, 2 * Math.PI);
+              context2.stroke();
+
+              // Relocating the crop circle
+              holeX.current = 0.1 * canvas.current.width - canvas1.current.offsetLeft;
+              holeY.current = 0.1 * canvas.current.height - canvas1.current.offsetTop;
+              aspectRatioDimensions.current = {
+                x: holeX.current,
+                y: holeY.current,
+                w: canvas.current.width,
+                h: canvas.current.height
+              };
+            } else if (aspectRatio == 'cover') {
+              context2.rect(0.05 * canvas.current.width, (canvas.current.height - coverHeight) / 2, coverWidth, coverHeight);
+              // Outline around the hole (for better visibility)
+              context2.strokeStyle = 'rgba(255, 255, 255)';
+              context2.lineWidth = 8;
+              context2.beginPath();
+              context2.rect(0.05 * canvas.current.width, (canvas.current.height - coverHeight) / 2, coverWidth, coverHeight);
+              context2.stroke();
+              aspectRatioDimensions.current = {
+                x: 0.05 * canvas.current.width,
+                y: (canvas.current.height - coverHeight) / 2,
+                w: coverWidth,
+                h: coverHeight
+              };
+            }
             context2.clip();
             context2.clearRect(0, 0, canvas.current.width, canvas.current.height);
-
-            // Outline around the hole (for better visibility)
-            context2.strokeStyle = 'rgba(255, 255, 255)';
-            context2.lineWidth = 8;
-            context2.beginPath();
-            context2.arc(holeX.current, holeY.current, holeRadius.current, 0, 2 * Math.PI);
-            context2.stroke();
-          case 24:
+          case 21:
           case "end":
             return _context2.stop();
         }
@@ -569,7 +649,7 @@ var CropCanvas = function CropCanvas(_ref) {
   }
   function putImageInCanvas(_x5) {
     return _putImageInCanvas.apply(this, arguments);
-  } // Styles
+  }
   function _putImageInCanvas() {
     _putImageInCanvas = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(event) {
       var img;
@@ -577,7 +657,7 @@ var CropCanvas = function CropCanvas(_ref) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             setRange(0);
-            display.current = 'flex';
+            setDisplay('flex');
             img = new Image();
             img.src = URL.createObjectURL(event.target.files[0]);
             setImgSrc(img.src);
@@ -601,19 +681,25 @@ var CropCanvas = function CropCanvas(_ref) {
     }));
     return _putImageInCanvas.apply(this, arguments);
   }
+  function unmountCanvas() {
+    console.log('blown');
+    setDisplay('none');
+  }
+
+  // Style
   var container = {
     display: 'flex',
     flexDirection: 'column'
   };
-  var button = {
-    margin: '1rem auto',
+  var button = _objectSpread2({
+    margin: 'auto',
     borderRadius: '8px',
-    background: backgroundColor,
+    backgroundColor: 'teal',
     color: 'white',
     padding: '.8rem 2rem'
-  };
-  var page = {
-    display: display.current,
+  }, style);
+  var page = _objectSpread2({
+    display: display,
     position: 'absolute',
     height: '100vh',
     width: '100vw',
@@ -622,9 +708,10 @@ var CropCanvas = function CropCanvas(_ref) {
     left: 0,
     justifyContent: 'center',
     flexDirection: 'column'
-  };
+  }, canvasStyle);
   var cropper = {
-    display: display.current,
+    zIndex: 20000,
+    display: display,
     flexDirection: 'column',
     margin: 'auto',
     top: 0,
@@ -638,9 +725,6 @@ var CropCanvas = function CropCanvas(_ref) {
     margin: '0 auto 1.5rem',
     flexDirection: 'column'
   };
-
-  // console.log(selectorStyle)
-
   return /*#__PURE__*/React.createElement("div", {
     style: container
   }, /*#__PURE__*/React.createElement("label", {
@@ -667,6 +751,15 @@ var CropCanvas = function CropCanvas(_ref) {
     className: "cropper",
     style: cropper
   }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      right: 25,
+      top: 10,
+      color: 'white',
+      fontSize: '4rem'
+    },
+    onClick: unmountCanvas
+  }, "\xD7"), /*#__PURE__*/React.createElement("div", {
     className: "image-container",
     style: {
       position: 'relative',
@@ -735,4 +828,4 @@ var CropCanvas = function CropCanvas(_ref) {
   }));
 };
 
-export { CropCanvas };
+export { CropCanvas, retrieveImageData };
