@@ -85,7 +85,7 @@ export default function component(){
             }}
          />
 
-         <img src = { imageSrc }  alt = '' /> //temporary image display
+         <img src = { imageSrc }  alt = 'temp img' /> { /* temporary image display */ }
          <button onClick={ retrieveImage }>Display image</button>
 
       </>
