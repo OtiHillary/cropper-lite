@@ -1,7 +1,7 @@
 {
   "name": "cropper-lite",
   "version": "1.0.0",
-  "description": "a simple cropping and resizing tool",
+  "description": "A simple cropping and resizing tool",
   "main": "dist/cjs/index.js",
   "files": [
     "dist"
@@ -16,7 +16,8 @@
   "keywords": [
     "cropper",
     "cropper-lite",
-    "react-cropper-lite"
+    "react-cropper-lite",
+    "cropperLite"
   ],
   "author": "otonye edwin",
   "license": "MIT",
