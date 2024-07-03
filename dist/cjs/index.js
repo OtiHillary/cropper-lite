@@ -824,7 +824,9 @@ var CropCanvas = function CropCanvas(_ref) {
     onClick: finishCropCanvas
   }, "done")))), /*#__PURE__*/React.createElement("canvas", {
     ref: canvas3,
-    style: {}
+    style: {
+      display: 'none'
+    }
   }));
 };
 
